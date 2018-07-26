@@ -1,6 +1,6 @@
 // Robert T. Casey
 // Coursera DSA - week 3
-// 6b_largest_number.cpp
+// 6c_largest_number.cpp
 
 #include <algorithm>
 #include <sstream>

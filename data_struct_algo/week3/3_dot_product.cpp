@@ -1,3 +1,11 @@
+// Robert T. Casey
+// Coursera DSA - week 3
+// 3_dot_product.cpp
+
+// General algorithm
+// sort each of the a and b arrays
+// if elements < 0, push those into separate sub_arrays
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -7,7 +15,12 @@ using std::vector;
 long long max_dot_product(vector<int> a, vector<int> b) {
   // write your code here
   long long result = 0;
-  for (size_t i = 0; i < a.size(); i++) {
+
+  std::sort(a.begin(), a.end());
+  std::sort(b.begin(), b.end());
+
+  int num_elems = a.size();
+  for (int i = num_elems - 1; i >= 0; --i ) {
     result += ((long long) a[i]) * b[i];
   }
   return result;
