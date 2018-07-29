@@ -14,7 +14,7 @@ int binary_search( const vector<int> & a,
 	               int x) 
 {
 	// there needs to be  a check for left <= right
-	if (left < right)
+	if (left <= right)
 	{
 		int mid = left + (right - left) / 2;
 		/*std::cout << "left = " << left;
