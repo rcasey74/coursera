@@ -58,7 +58,7 @@ int edit_distance(const string &str1, const string &str2) {
 		}
 	}
 
-	std::cout << "D[i][j] matrix:" << std::endl;
+	/*std::cout << "D[i][j] matrix:" << std::endl;
 	for (int i = 0; i <= len1; ++i)
 	{
 		for (int j = 0; j <= len2; ++j)
@@ -67,7 +67,7 @@ int edit_distance(const string &str1, const string &str2) {
 		}
 		std::cout << std::endl;
 	}
-
+*/
 	int min_val = D[len1][len2];
 	
 	for (int d = 0; d <= len1; ++d)
