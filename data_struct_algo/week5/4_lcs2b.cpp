@@ -1,6 +1,6 @@
 // Robert T. Casey
 // Coursera DSA - week 5
-// 4_lcs2.cpp
+// 4_lcs2b.cpp
 // Problem statement:
 // Compute the length of a longest common subsequence of two subsequences.
 // (LCS) - basis of diff
