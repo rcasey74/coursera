@@ -1,3 +1,7 @@
+// Robert T. Casey
+// Coursera DSA - week 5
+// 3_edit_distance.cpp
+
 #include <iostream>
 #include <vector>
 #include <string>
