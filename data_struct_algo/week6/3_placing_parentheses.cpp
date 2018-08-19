@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>	// atoi
+#include <algorithm>
 
 using std::vector;
 using std::string;
@@ -34,6 +35,38 @@ long long eval(long long a, long long b, char op) {
   } else {
     assert(0);
   }
+}
+
+void MinAndMax(int                 i, 
+	           int                 j, 
+	           long long &         p_min, 
+	           long long &         p_max, 
+	           long long **        min_arr, 
+	           long long **        max_arr, 
+	           const std::string & ops )
+{
+	p_min = LLONG_MAX;
+	p_max = LLONG_MIN;
+	long long a, b, c, d;
+	std::vector< long long > evals; // a slightly cleaner way to do max/min of 5 elements rather than nesting calls to std::max/min
+	for (int k = i; k <= j - 1; ++k)
+	{
+		a = eval(max_arr[i][k], max_arr[k + 1][j], ops[k]); // should ops[k] be ops[k-1]?
+		evals.push_back(a);
+		b = eval(max_arr[i][k], min_arr[k + 1][j], ops[k]);
+		evals.push_back(b);
+		c = eval(min_arr[i][k], max_arr[k + 1][j], ops[k]);
+		evals.push_back(c);
+		d = eval(min_arr[i][k], min_arr[k + 1][j], ops[k]);
+		evals.push_back(d);
+
+		evals.push_back(p_min);
+		evals.push_back(p_max);
+		std::sort(evals.begin(), evals.end());
+
+		p_min = evals.front();
+		p_max = evals.back();
+	}
 }
 
 long long get_maximum_value(const string &exp) {
@@ -80,9 +113,56 @@ long long get_maximum_value(const string &exp) {
 	}
 	std::cout << std::endl;
 	
-	
 	// Step 2.  Actually solve the problem.
-  return 0;
+	// We're building two, 2D matrices as we go, for DP approach:
+	// Min matrix, Max matrix.
+	// Min matrix stores the minimum value of the subexpression, while max stores the opposite.
+	int n = numbers.size();
+	long long ** mmin = new long long *[n];
+	long long ** mmax = new long long *[n];
+	for (int i = 0; i < n; ++i)
+	{
+		mmin[0] = new long long[n];
+		mmax[0] = new long long[n];
+	}
+
+	// Build up our dp solution from the ground up.
+	// Init the diagonal members of the 2 matrices to just the numbers themselves,
+	// since j - i == 0 here, no "subexpression" exists beyond just the number itself.
+	for (int i = 0; i < n; ++i)
+	{
+		mmin[i][i] = numbers[i];
+		mmax[i][i] = numbers[i];
+	}	// end for i
+
+	int j = 0;
+	long long eval_min, eval_max;
+	for (int s = 0; s < n - 1; ++s)
+	{
+		for (int i = 0; i < n - s; ++i) // are we going to need n - s -1 in the termination condition?
+		{
+			j = i + s;
+
+			MinAndMax(i, j, eval_min, eval_max);
+
+			mmin[i][j] = eval_min;
+			mmax[i][j] = eval_max;
+		}	// end for i
+	}	// end for s
+
+	// Save the result
+	int result = mmax[0][n-1]; 
+
+	// Cleanup time
+	for (int d = 0; d < n; ++d)
+	{
+		delete[] mmin[d];
+		delete[] mmax[d];
+	}
+	delete[] mmin;
+	delete[] mmax;
+
+  return result;
 }
 
 int main() {
