@@ -23,16 +23,9 @@ bool DecreaseOrderCompare(int i, int j)
 
 int optimal_weight(int W, const vector<int> &w) {
 
-  // Seems like a wise solution will involve sorting the bars first.
-  //std::sort(w.begin(), w.end(), DecreaseOrderCompare);
-  // List is now in decreasing order
-
-  // Just in case:  erase those elements > W, since we can never add those to the knapsack
-  // meh:  the input is const...cannot delete the elements
-  //while ( !w.empty() && *(w.begin()) > W )
-  //{
-	 // w.erase( w.begin() );
-  //}
+  // First attempt sought to decrease run-time by sorting the elements,
+  // but then basic parameter checking showed this is impossible (without copying the array),
+  // given the const-ness of w.
   int n = static_cast< int >(w.size());
 
   // Set up a value matrix, which iterates
