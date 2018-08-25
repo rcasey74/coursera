@@ -19,11 +19,14 @@
 #include <vector>
 #include <cstdlib>	// atoi
 #include <algorithm>
+#include <climits>
 
 using std::vector;
 using std::string;
 using std::max;
 using std::min;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 long long eval(long long a, long long b, char op) {
   if (op == '*') {
@@ -37,7 +40,9 @@ long long eval(long long a, long long b, char op) {
   }
 }
 
-void MinAndMax(int                 i, 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void MinAndMax(int                 i,
 	           int                 j, 
 	           long long &         p_min, 
 	           long long &         p_max, 
@@ -45,29 +50,43 @@ void MinAndMax(int                 i,
 	           long long **        max_arr, 
 	           const std::string & ops )
 {
-	p_min = LLONG_MAX;
-	p_max = LLONG_MIN;
+	p_min = LLONG_MAX;  // basically + infinity
+	p_max = LLONG_MIN;  // basically - infinity
 	long long a, b, c, d;
 	std::vector< long long > evals; // a slightly cleaner way to do max/min of 5 elements rather than nesting calls to std::max/min
 	for (int k = i; k <= j - 1; ++k)
 	{
+		std::cout << "MinAndMax() k = " << k << std::endl;
+
+
 		a = eval(max_arr[i][k], max_arr[k + 1][j], ops[k]); // should ops[k] be ops[k-1]?
+		std::cout << "a = " << a << ", max_arr[i][k] = "
 		evals.push_back(a);
+
 		b = eval(max_arr[i][k], min_arr[k + 1][j], ops[k]);
 		evals.push_back(b);
+
 		c = eval(min_arr[i][k], max_arr[k + 1][j], ops[k]);
 		evals.push_back(c);
+
 		d = eval(min_arr[i][k], min_arr[k + 1][j], ops[k]);
 		evals.push_back(d);
 
-		evals.push_back(p_min);
-		evals.push_back(p_max);
+//		evals.push_back(p_min);
+//		evals.push_back(p_max);
 		std::sort(evals.begin(), evals.end());
 
-		p_min = evals.front();
-		p_max = evals.back();
+		long long min_alpha = evals.front(),
+		          max_alpha = evals.back();
+
+		p_min = min_alpha < p_min ? min_alpha : p_min;
+		p_max = max_alpha > p_max ? max_alpha : p_max;
+
+		std::cout << "At end of MinAndMax(), p_min = " << p_min << " and p_max = " << p_max << std::endl;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 long long get_maximum_value(const string &exp) {
   
@@ -86,8 +105,8 @@ long long get_maximum_value(const string &exp) {
 			break;
 		}
 	}
-	ops += '\0';
-	std::cout << "OPS: " << ops << std::endl;
+//	ops += '\0';
+	std::cout << "Operators = " << ops << std::endl;
 
 	// Make copy of input string
 	char * in_str = const_cast<char*>(exp.c_str());
@@ -129,21 +148,38 @@ long long get_maximum_value(const string &exp) {
 	// Build up our dp solution from the ground up.
 	// Init the diagonal members of the 2 matrices to just the numbers themselves,
 	// since j - i == 0 here, no "subexpression" exists beyond just the number itself.
+	// Init remaining members to 0
 	for (int i = 0; i < n; ++i)
 	{
-		mmin[i][i] = numbers[i];
-		mmax[i][i] = numbers[i];
+		for( int j = 0; j < n; ++j )
+		{
+			if( i == j )  // This is the most important step:  init the diagonals to be the digits themselves.
+			{
+				mmin[i][j] = numbers[i];
+	  			mmax[i][j] = numbers[i];
+			}
+			else
+			{
+				mmin[i][j] = 0;
+				mmax[i][j] = 0;
+			}
+
+		}  // end for j
 	}	// end for i
 
-	int j = 0;
-	long long eval_min, eval_max;
+
+	// These next loops must proceed carefully: starting at the main diagonal (i.e. i == j ) and then moving outwards ( i != j )
+	int       j        = 0;
+	long long eval_min = 0,
+			  eval_max = 0;
+
 	for (int s = 0; s < n - 1; ++s)
 	{
-		for (int i = 0; i < n - s; ++i) // are we going to need n - s -1 in the termination condition?
+		for (int i = 0; i <= n - ( s + 2 ); ++i) // n - ( s + 2 ) ensures that i starts at the 2nd-to-last index and ends at the first index (0)
 		{
 			j = i + s;
 
-			MinAndMax(i, j, eval_min, eval_max);
+			MinAndMax(i, j, eval_min, eval_max, mmin, mmax, ops);
 
 			mmin[i][j] = eval_min;
 			mmax[i][j] = eval_max;
@@ -164,6 +200,8 @@ long long get_maximum_value(const string &exp) {
 
   return result;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main() {
   string s;
