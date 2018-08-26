@@ -60,39 +60,39 @@ void MinAndMax(int                 i,
 	std::vector< long long > eval_arr; // a slightly cleaner way to do max/min of 5 elements rather than nesting calls to std::max/min
 	for (int k = i; k <= j - 1; ++k)
 	{
-		std::cout << "MinAndMax() k = " << k      << std::endl;
-		std::cout << "op_k = "          << ops[k] << std::endl;
+//		std::cout << "MinAndMax() k = " << k      << std::endl;
+//		std::cout << "op_k = "          << ops[k] << std::endl;
 
 		a = eval(max_arr[i][k], max_arr[k + 1][j], ops[k]); // should ops[k] be ops[k-1]?
-		std::cout << "a = " << a << std::endl;
+//		std::cout << "a = " << a << std::endl;
 		eval_arr.push_back(a);
 
 		b = eval(max_arr[i][k], min_arr[k + 1][j], ops[k]);
 		eval_arr.push_back(b);
-		std::cout << "b = " << b << std::endl;
+//		std::cout << "b = " << b << std::endl;
 
 		c = eval(min_arr[i][k], max_arr[k + 1][j], ops[k]);
 		eval_arr.push_back(c);
-		std::cout << "c = " << c << std::endl;
+//		std::cout << "c = " << c << std::endl;
 
 		d = eval(min_arr[i][k], min_arr[k + 1][j], ops[k]);
 		eval_arr.push_back(d);
-		std::cout << "d = " << d << std::endl;
+//		std::cout << "d = " << d << std::endl;
 
 		std::sort(eval_arr.begin(), eval_arr.end());
 
 		long long min_alpha = eval_arr.front(),
 		          max_alpha = eval_arr.back();
 
-		if( min_alpha >= max_alpha )
-		{
-			std::cout << "min_alpha >= max_alpha: " << min_alpha << " >= " << max_alpha << std::endl;
-		}
+//		if( min_alpha >= max_alpha )
+//		{
+//			std::cout << "min_alpha >= max_alpha: " << min_alpha << " >= " << max_alpha << std::endl;
+//		}
 
 		p_min = min_alpha < p_min ? min_alpha : p_min;
 		p_max = max_alpha > p_max ? max_alpha : p_max;
 
-		std::cout << "At end of MinAndMax(), p_min = " << p_min << " and p_max = " << p_max << std::endl;
+//		std::cout << "At end of MinAndMax(), p_min = " << p_min << " and p_max = " << p_max << std::endl;
 
 		eval_arr.clear();  // Key step!  otherwise all kind of gunk builds up
 	}
@@ -118,7 +118,7 @@ long long get_maximum_value(const string &exp) {
 		}
 	}
 //	ops += '\0';
-	std::cout << "Operators: [" << ops << "]" << std::endl;
+//	std::cout << "Operators: [" << ops << "]" << std::endl;
 
 	// Make copy of input string
 	char * in_str = const_cast<char*>(exp.c_str());
@@ -134,16 +134,16 @@ long long get_maximum_value(const string &exp) {
 			numbers.push_back(atoi(num_token));
 		}
 	}
-	std::cout << "After tokenization loop" << std::endl;
+//	std::cout << "After tokenization loop" << std::endl;
 
 	// Test that our parsing works.
-	std::cout << "NUMBERS: ";
-	for (int i = 0; i < numbers.size(); ++i)
-	{
-		std::cout << numbers[i] << " ";
-	}
-	std::cout << std::endl;
-	
+//	std::cout << "NUMBERS: ";
+//	for (int i = 0; i < numbers.size(); ++i)
+//	{
+//		std::cout << numbers[i] << " ";
+//	}
+//	std::cout << std::endl;
+//
 	// Step 2.  Actually solve the problem.
 	// We're building two, 2D matrices as we go, for DP approach:
 	// Min matrix, Max matrix.
@@ -161,7 +161,7 @@ long long get_maximum_value(const string &exp) {
 	// Init the diagonal members of the 2 matrices to just the numbers themselves,
 	// since j - i == 0 here, no "subexpression" exists beyond just the number itself.
 	// Init remaining members to 0
-	std::cout << "Initial value of Min and Max matrices: " << std::endl;
+//	std::cout << "Initial value of Min and Max matrices: " << std::endl;
 	for (int i = 0; i < n; ++i)
 	{
 		for( int j = 0; j < n; ++j )
@@ -176,9 +176,9 @@ long long get_maximum_value(const string &exp) {
 				mmin[i][j] = 0;
 				mmax[i][j] = 0;
 			}
-            std::cout << mmin[i][j] << " ";
+//            std::cout << mmin[i][j] << " ";
 		}  // end for j
-		std::cout << std::endl;
+//		std::cout << std::endl;
 	}	// end for i
 
 
@@ -200,24 +200,24 @@ long long get_maximum_value(const string &exp) {
 		}	// end for i
 	}	// end for s
 
-	std::cout << "Final values of Max array: " << std::endl;
-	for( int r = 0; r < n; ++r )
-	{
-		for( int c = 0; c < n; ++c )
-		{
-			std::cout << mmax[r][c] << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "Final values of Min array: " << std::endl;
-	for( int r = 0; r < n; ++r )
-	{
-		for( int c = 0; c < n; ++c )
-		{
-			std::cout << mmin[r][c] << " ";
-		}
-		std::cout << std::endl;
-	}
+//	std::cout << "Final values of Max array: " << std::endl;
+//	for( int r = 0; r < n; ++r )
+//	{
+//		for( int c = 0; c < n; ++c )
+//		{
+//			std::cout << mmax[r][c] << " ";
+//		}
+//		std::cout << std::endl;
+//	}
+//	std::cout << "Final values of Min array: " << std::endl;
+//	for( int r = 0; r < n; ++r )
+//	{
+//		for( int c = 0; c < n; ++c )
+//		{
+//			std::cout << mmin[r][c] << " ";
+//		}
+//		std::cout << std::endl;
+//	}
 
 	// Save the result
 	int result = mmax[0][n-1]; 
