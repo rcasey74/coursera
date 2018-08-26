@@ -15,7 +15,7 @@
 #include <iostream>
 #include <cassert>
 #include <cstring>  // strtok
-#include <string>
+#include <string>   // stoll
 #include <vector>
 #include <cstdlib>	// atoi
 #include <algorithm>  // sort
@@ -100,7 +100,7 @@ void MinAndMax(int                 i,
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-long long get_maximum_value(const string &exp) {
+long long get_maximum_value( string & exp) {
   
     // 1. Parse the input string into ops and numbers
 	std::string ops = "";
@@ -121,18 +121,24 @@ long long get_maximum_value(const string &exp) {
 //	std::cout << "Operators: [" << ops << "]" << std::endl;
 
 	// Make copy of input string
-	char * in_str = const_cast<char*>(exp.c_str());
-	std::vector< int > numbers;
-	char * num_token = strtok( in_str, "+-*" ) ;
-	numbers.push_back(atoi(num_token));
+	char * in_str = new char [ exp.length() + 1 ];
+    std::strncpy( in_str, exp.c_str(), exp.length() );
+
+	std::vector< long long > numbers;
+	char * num_token = strtok( in_str, "+-*" );
+	std::string curr_num( num_token );
+	numbers.push_back( std::stoll( static_cast< const std::string & >(curr_num)));
 	
 	while ( num_token != NULL )
 	{
 		num_token = strtok(NULL, "+-*");
 		if (num_token != NULL)
 		{
-			numbers.push_back(atoi(num_token));
+//			numbers.push_back( atoi(num_token));  // fine for integers
+			curr_num = num_token;
+			numbers.push_back( std::stoll( static_cast< const std::string & >(curr_num)));  // but we need for long long!
 		}
+		curr_num.clear();
 	}
 //	std::cout << "After tokenization loop" << std::endl;
 
@@ -220,7 +226,7 @@ long long get_maximum_value(const string &exp) {
 //	}
 
 	// Save the result
-	int result = mmax[0][n-1]; 
+	long long result = mmax[0][n-1];
 
 	// Cleanup time
 	for (int d = 0; d < n; ++d)
@@ -230,6 +236,8 @@ long long get_maximum_value(const string &exp) {
 	}
 	delete[] mmin;
 	delete[] mmax;
+
+	delete [] in_str;
 
   return result;
 }
