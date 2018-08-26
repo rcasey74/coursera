@@ -50,39 +50,49 @@ void MinAndMax(int                 i,
 	           long long **        max_arr, 
 	           const std::string & ops )
 {
-	p_min = LLONG_MAX;  // basically + infinity
-	p_max = LLONG_MIN;  // basically - infinity
-	long long a, b, c, d;
-	std::vector< long long > evals; // a slightly cleaner way to do max/min of 5 elements rather than nesting calls to std::max/min
+	p_min       = LLONG_MAX;  // basically + infinity
+	p_max       = LLONG_MIN;  // basically - infinity
+	long long a = 0,
+			  b = 0,
+			  c = 0,
+			  d = 0;
+
+	std::vector< long long > eval_arr; // a slightly cleaner way to do max/min of 5 elements rather than nesting calls to std::max/min
 	for (int k = i; k <= j - 1; ++k)
 	{
-		std::cout << "MinAndMax() k = " << k << std::endl;
-
+//		std::cout << "MinAndMax() k = " << k << std::endl;
 
 		a = eval(max_arr[i][k], max_arr[k + 1][j], ops[k]); // should ops[k] be ops[k-1]?
-		std::cout << "a = " << a << ", max_arr[i][k] = "
-		evals.push_back(a);
+//		std::cout << "a = " << a << ", max_arr[i][k] = "
+		eval_arr.push_back(a);
 
 		b = eval(max_arr[i][k], min_arr[k + 1][j], ops[k]);
-		evals.push_back(b);
+		eval_arr.push_back(b);
 
 		c = eval(min_arr[i][k], max_arr[k + 1][j], ops[k]);
-		evals.push_back(c);
+		eval_arr.push_back(c);
 
 		d = eval(min_arr[i][k], min_arr[k + 1][j], ops[k]);
-		evals.push_back(d);
+		eval_arr.push_back(d);
 
 //		evals.push_back(p_min);
 //		evals.push_back(p_max);
-		std::sort(evals.begin(), evals.end());
+		std::sort(eval_arr.begin(), eval_arr.end());
 
-		long long min_alpha = evals.front(),
-		          max_alpha = evals.back();
+		long long min_alpha = eval_arr.front(),
+		          max_alpha = eval_arr.back();
+
+		if( min_alpha >= max_alpha )
+		{
+			std::cout << "min_alpha >= max_alpha: " << min_alpha << " >= " << max_alpha << std::endl;
+		}
 
 		p_min = min_alpha < p_min ? min_alpha : p_min;
 		p_max = max_alpha > p_max ? max_alpha : p_max;
 
 		std::cout << "At end of MinAndMax(), p_min = " << p_min << " and p_max = " << p_max << std::endl;
+
+		eval_arr.clear();  // Key step!  otherwise all kind of gunk builds up
 	}
 }
 
